@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestor de Pendientes — Estudio CLÉ</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:13px}
+.topbar{background:#fff;border-bottom:0.5px solid #e0ddd4;padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.topbar h1{font-size:15px;font-weight:500;flex:1}
+.topbar .sync-btn{padding:5px 12px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;cursor:pointer;font-size:12px;color:#555}
+.topbar .sync-btn:hover{background:#f0efe9}
+.topbar .sync-status{font-size:11px;color:#888}
+.topbar .sync-status.ok{color:#3B6D11}
+.topbar .sync-status.err{color:#A32D2D}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.tabs{display:flex;border-bottom:0.5px solid #ddd;margin-bottom:16px;background:#fff;border-radius:10px 10px 0 0;padding:0 16px}
+.tab{padding:10px 18px;cursor:pointer;font-size:13px;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:500}
+/* carga */
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.week-nav button{padding:5px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;cursor:pointer;font-size:12px}
+.week-nav button:hover{background:#f0efe9}
+.week-nav span{font-size:13px;font-weight:500;flex:1;text-align:center}
+.section-title{font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.socia-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.socia-card{background:#fff;border:0.5px solid #e0ddd4;border-radius:12px;padding:12px 14px}
+.socia-card.warn{border-color:#EF9F27}.socia-card.over{border-color:#E24B4A}
+.sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.sc-name{font-weight:500;font-size:14px}
+.sc-badge{font-size:11px;padding:2px 9px;border-radius:10px}
+.sc-badge.ok{background:#EAF3DE;color:#3B6D11}.sc-badge.warn{background:#FAEEDA;color:#854F0B}.sc-badge.over{background:#FCEBEB;color:#A32D2D}
+.sc-row{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:4px}
+.sc-row span:last-child{font-weight:500;color:#1a1a1a}
+.bar-bg{height:5px;background:#f0efe9;border-radius:3px;overflow:hidden;margin:6px 0 8px}
+.bar-fill{height:100%;border-radius:3px}
+.bar-ok{background:#63992260}.bar-warn{background:#EF9F27}.bar-over{background:#E24B4A}
+.toggle-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#888}
+.toggle-row input{accent-color:#185FA5;cursor:pointer}
+.legend-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#888}
+.legend-dot{width:8px;height:8px;border-radius:2px}
+.hint{font-size:11px;color:#888;margin-bottom:10px;padding:6px 10px;background:#f0efe9;border-radius:8px}
+.day-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.day-col{border-radius:10px;padding:9px 7px;border:1.5px solid transparent;background:#fff;min-height:110px;transition:border-color .15s,background .15s}
+.day-col.today-col{background:#EBF4FF}
+.day-col.has-over{border-color:#E24B4A}.day-col.has-warn{border-color:#EF9F27}
+.day-col.drag-over{border-color:#185FA5!important;background:rgba(24,95,165,.07)!important}
+.day-col.non-working{opacity:.55;border-style:dashed;border-color:#ccc}
+.day-col.non-working.has-over{border-color:#E24B4A}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.day-label{font-size:11px;font-weight:500;color:#666}
+.today-col .day-label{color:#185FA5}
+.non-working .day-label{text-decoration:line-through}
+.non-hab-btn{font-size:10px;padding:1px 6px;border-radius:5px;border:0.5px solid #ddd;background:transparent;color:#999;cursor:pointer;line-height:1.6}
+.non-hab-btn:hover{background:#f5f4f0}
+.non-hab-btn.active{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}
+.day-cap-bars{margin-bottom:6px}
+.ds-row{margin-bottom:3px}
+.ds-name{font-size:10px;display:flex;justify-content:space-between;color:#999;margin-bottom:1px}
+.ds-name span.ok{color:#999}.ds-name span.warn{color:#854F0B}.ds-name span.over{color:#A32D2D;font-weight:500}
+.dbar-bg{height:3px;background:#f0efe9;border-radius:2px;overflow:hidden}
+.dbar-fill{height:100%;border-radius:2px}
+.task-chip{background:#fff;border:0.5px solid #e0ddd4;border-radius:7px;padding:6px 7px;margin-bottom:4px;cursor:grab;font-size:11px;line-height:1.3;user-select:none;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.task-chip:active{cursor:grabbing}
+.task-chip.dragging{opacity:.3}
+.task-chip.chip-warn{border-left:2px solid #EF9F27}.task-chip.chip-over{border-left:2px solid #E24B4A}
+.chip-top{display:flex;align-items:center;gap:4px;margin-bottom:3px;flex-wrap:wrap}
+.chip-socia{font-size:10px;font-weight:500;color:#3C3489;background:#EEEDFE;padding:1px 5px;border-radius:8px}
+.chip-tarea{color:#1a1a1a;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chip-bottom{margin-top:3px}
+.chip-mins{font-size:10px;color:#999}
+.prio-U{font-size:9px;padding:1px 4px;border-radius:4px;background:#FCEBEB;color:#A32D2D;font-weight:500}
+.prio-N{font-size:9px;padding:1px 4px;border-radius:4px;background:#FAEEDA;color:#854F0B;font-weight:500}
+.prio-P{font-size:9px;padding:1px 4px;border-radius:4px;background:#EAF3DE;color:#3B6D11;font-weight:500}
+.tipo-chip{font-size:9px;padding:1px 4px;border-radius:4px;font-weight:500}
+.tipo-FAC{background:#E6F1FB;color:#185FA5}.tipo-SOC{background:#EEEDFE;color:#3C3489}
+.tipo-LIT{background:#FCEBEB;color:#A32D2D}.tipo-PI{background:#FAEEDA;color:#854F0B}
+.tipo-ADM{background:#EAF3DE;color:#3B6D11}.tipo-OTR{background:#f0efe9;color:#666}
+.no-tasks{font-size:10px;color:#bbb;text-align:center;padding:8px 0}
+.no-hab-warn{font-size:10px;color:#A32D2D;text-align:center;padding:4px;background:#FCEBEB;border-radius:5px;margin-top:4px}
+/* tabla */
+.toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 12px;align-items:center}
+.toolbar input,.toolbar select{font-size:12px;padding:5px 9px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;height:31px}
+.toolbar input{flex:1;min-width:120px}
+.add-btn{padding:5px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;cursor:pointer;font-size:12px;height:31px;font-weight:500}
+.add-btn:hover{background:#f0efe9}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.metric{background:#fff;border-radius:10px;padding:10px 14px;border:0.5px solid #e0ddd4}
+.metric .lbl{font-size:11px;color:#888;margin-bottom:3px}
+.metric .val{font-size:22px;font-weight:500}
+.metric.danger .val{color:#A32D2D}.metric.warn .val{color:#854F0B}
+.table-wrap{background:#fff;border-radius:10px;border:0.5px solid #e0ddd4;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+thead th{text-align:left;font-size:11px;font-weight:500;color:#888;padding:8px 10px;border-bottom:0.5px solid #e0ddd4;background:#fafaf8}
+tbody tr{border-bottom:0.5px solid #f0ede8;cursor:pointer}
+tbody tr:hover{background:#fafaf8}
+tbody tr.done{opacity:.4}
+td{padding:7px 10px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.wrap{white-space:normal;line-height:1.4}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:500}
+.b-pend{background:#FAEEDA;color:#854F0B}.b-done{background:#EAF3DE;color:#3B6D11}.b-socia{background:#EEEDFE;color:#3C3489}
+.vc-vencido{color:#A32D2D;font-weight:500}.vc-hoy{color:#854F0B;font-weight:500}.vc-pronto{color:#185FA5}.vc-ok{color:#888}
+.nota-prev{font-size:11px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.prio-pill-U{display:inline-block;width:8px;height:8px;border-radius:2px;background:#E24B4A;margin-right:3px;vertical-align:middle}
+.prio-pill-N{display:inline-block;width:8px;height:8px;border-radius:2px;background:#EF9F27;margin-right:3px;vertical-align:middle}
+.prio-pill-P{display:inline-block;width:8px;height:8px;border-radius:2px;background:#639922;margin-right:3px;vertical-align:middle}
+.empty{padding:32px;text-align:center;color:#aaa}
+/* loading */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;gap:10px;color:#888;font-size:13px}
+.spinner{width:18px;height:18px;border:2px solid #e0ddd4;border-top-color:#185FA5;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:0.5px solid #e0ddd4;padding:22px;width:500px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.modal h3{font-size:15px;font-weight:500;margin-bottom:14px}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:12px;color:#888;margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;font-size:13px;font-family:inherit}
+.field textarea{resize:vertical;min-height:54px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.btn-save{padding:8px 20px;border-radius:8px;border:none;background:#185FA5;color:#fff;font-size:13px;cursor:pointer;font-weight:500}
+.btn-save:hover{background:#0C447C}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
+.btn-cancel{padding:8px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:transparent;color:#1a1a1a;font-size:13px;cursor:pointer}
+.btn-del{padding:8px 14px;border-radius:8px;border:0.5px solid #F7C1C1;background:transparent;color:#A32D2D;font-size:13px;cursor:pointer;margin-right:auto}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Gestor de Pendientes — Estudio CLÉ</h1>
+  <button class="sync-btn" onclick="loadData()">↻ Sincronizar</button>
+  <span class="sync-status" id="syncStatus"></span>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('carga')">Carga horaria</div>
+    <div class="tab" onclick="switchTab('tareas')">Tareas</div>
+  </div>
+
+  <!-- TAB CARGA -->
+  <div id="tabCarga">
+    <div class="week-nav">
+      <button onclick="changeWeek(-1)">← Sem. ant.</button>
+      <span id="weekLabel"></span>
+      <button onclick="changeWeek(1)">Sem. sig. →</button>
+    </div>
+    <div class="section-title">Resumen semanal</div>
+    <div class="socia-cards" id="sociaCards"></div>
+    <div class="section-title">Redistribuir tareas — arrastrá entre días</div>
+    <div class="legend-row">
+      <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Urgente</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Normal</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Puede esperar</span>
+      <span style="width:1px;height:14px;background:#e0ddd4;margin:0 4px"></span>
+      <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Facturación</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD"></span>Societario</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Litigios</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#BA7517"></span>Prop. Industrial</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Administrativo</span>
+    </div>
+    <div class="hint">Las tareas urgentes aparecen primero. Arrastrá chips para redistribuir. Los cambios se guardan automáticamente en Google Sheets.</div>
+    <div class="day-grid" id="dayGrid"></div>
+  </div>
+
+  <!-- TAB TAREAS -->
+  <div id="tabTareas" style="display:none">
+    <div class="metrics">
+      <div class="metric danger"><div class="lbl">Vencidas</div><div class="val" id="mVenc">—</div></div>
+      <div class="metric warn"><div class="lbl">Vencen hoy</div><div class="val" id="mHoy">—</div></div>
+      <div class="metric"><div class="lbl">Pendientes</div><div class="val" id="mPend">—</div></div>
+      <div class="metric"><div class="lbl">Realizadas</div><div class="val" id="mReal">—</div></div>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Buscar tarea o cliente...">
+      <select id="filtSocia"><option value="">Todas las socias</option><option>Julieta</option><option>Carolina</option><option>Luisina</option></select>
+      <select id="filtEstado"><option value="">Todo estado</option><option value="Pendiente">Pendiente</option><option value="Realizado">Realizado</option></select>
+      <select id="filtPrio"><option value="">Toda prioridad</option><option value="U">Urgente</option><option value="N">Normal</option><option value="P">Puede esperar</option></select>
+      <select id="filtTipo"><option value="">Todo tipo</option><option value="FAC">Facturación</option><option value="SOC">Societario</option><option value="LIT">Litigios</option><option value="PI">Prop. Industrial</option><option value="ADM">Administrativo</option><option value="OTR">Otro</option></select>
+      <select id="filtCliente"></select>
+      <button class="add-btn" onclick="openModal()">+ Nueva tarea</button>
+    </div>
+    <div class="table-wrap">
+      <div id="loadingMsg" class="loading"><div class="spinner"></div> Cargando desde Google Sheets...</div>
+      <table id="taskTable" style="display:none">
+        <thead><tr>
+          <th style="width:80px">Prioridad</th>
+          <th style="width:70px">Socia</th>
+          <th style="width:110px">Cliente</th>
+          <th>Tarea</th>
+          <th style="width:90px">Área</th>
+          <th style="width:88px">Vencimiento</th>
+          <th style="width:52px">Mins</th>
+          <th style="width:72px">Estado</th>
+          <th style="width:80px">Acción</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="emptyMsg" class="empty" style="display:none">No hay tareas que coincidan.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="modalTitle">Nueva tarea</h3>
+    <div class="field-row">
+      <div class="field"><label>Socia</label><select id="fSocia"><option>Julieta</option><option>Carolina</option><option>Luisina</option></select></div>
+      <div class="field"><label>Prioridad</label><select id="fPrio"><option value="U">Urgente</option><option value="N" selected>Normal</option><option value="P">Puede esperar</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Cliente</label><input id="fCliente"></div>
+      <div class="field"><label>Área</label><select id="fTipo"><option value="FAC">Facturación</option><option value="SOC">Societario</option><option value="LIT">Litigios</option><option value="PI">Prop. Industrial</option><option value="ADM">Administrativo</option><option value="OTR">Otro</option></select></div>
+    </div>
+    <div class="field"><label>Tarea</label><input id="fTarea"></div>
+    <div class="field-row">
+      <div class="field"><label>Vencimiento</label><input type="date" id="fVenc"></div>
+      <div class="field"><label>Minutos estimados</label><input type="number" id="fMins" min="0"></div>
+    </div>
+    <div class="field"><label>Estado</label><select id="fEstado"><option>Pendiente</option><option>Realizado</option></select></div>
+    <div class="field"><label>Comentarios internos</label><textarea id="fComent"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-del" id="btnDel" style="display:none" onclick="deleteTask()">Eliminar</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" id="btnSave" onclick="saveTask()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/a/macros/estudio-cle.com/s/AKfycbwpmjSNRn4Gh0DydNgLg8fTLqgJLrxSLiDKD9Xt494MnNqac5hx6amek5Yb4bGEkS9y6g/exec';
+const CFG = {Julieta:{horas:8,mitad:false},Carolina:{horas:8,mitad:false},Luisina:{horas:4,mitad:false}};
+const WARN = 0.75;
+const nonWorking = new Set();
+const PRIO_ORDER = {U:0,N:1,P:2};
+const PRIO_LABEL = {U:'Urgente',N:'Normal',P:'Puede esperar'};
+const PRIO_PILL = {U:'prio-pill-U',N:'prio-pill-N',P:'prio-pill-P'};
+const TIPO_LABEL = {FAC:'Facturación',SOC:'Societario',LIT:'Litigios',PI:'Prop. Ind.',ADM:'Admin.',OTR:'Otro'};
+const TIPO_CLS = {FAC:'tipo-FAC',SOC:'tipo-SOC',LIT:'tipo-LIT',PI:'tipo-PI',ADM:'tipo-ADM',OTR:'tipo-OTR'};
+const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const DAYS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+let tasks = [];
+let editId = null;
+let weekOffset = 0;
+let activeTab = 'carga';
+let dragId = null;
+let saving = false;
+
+const today = new Date(); today.setHours(0,0,0,0);
+
+// ── API ──────────────────────────────────────────────
+function apiCall(params) {
+  const url = API + '?' + Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+  return fetch(url).then(r=>r.json());
+}
+
+async function loadData() {
+  setStatus('Sincronizando...', '');
+  try {
+    const res = await apiCall({action:'getTareas'});
+    if (res.error) throw new Error(res.error);
+    tasks = res.tareas;
+    setStatus('Sincronizado ✓', 'ok');
+    renderAll();
+  } catch(e) {
+    setStatus('Error al sincronizar', 'err');
+    console.error(e);
+  }
+}
+
+async function apiSave(task) {
+  const action = task.id ? 'updateTarea' : 'saveTarea';
+  return apiCall({action, data: JSON.stringify(task)});
+}
+
+async function apiDelete(id) {
+  return apiCall({action:'deleteTarea', id});
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('syncStatus');
+  el.textContent = msg;
+  el.className = 'sync-status ' + cls;
+}
+
+// ── UTILS ────────────────────────────────────────────
+function getWeekDays(off=0){const d=new Date(today),dow=d.getDay(),mon=new Date(d);mon.setDate(d.getDate()-(dow===0?6:dow-1)+off*7);return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});}
+function toStr(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function parseDate(s){if(!s)return null;const[y,m,d]=s.split('-').map(Number);const dt=new Date(y,m-1,d);return isNaN(dt)?null:dt;}
+function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function fmtDay(d){return`${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;}
+function fmtRange(days){const a=days[0],b=days[4];return`${a.getDate()} ${MONTHS[a.getMonth()]} — ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;}
+function fmtDate(s){if(!s)return'-';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;}
+function dispMin(s){const c=CFG[s];if(!c)return 240;return(c.mitad?c.horas*.5:c.horas)*60;}
+function pct(u,cap){return cap>0?u/cap:0;}
+function cls(p){return p>=1?'over':p>=WARN?'warn':'ok';}
+function barCls(p){return p>=1?'bar-over':p>=WARN?'bar-warn':'bar-ok';}
+function minsDay(socia,ds){return tasks.filter(t=>t.socia===socia&&t.estado==='Pendiente'&&t.venc===ds&&t.mins).reduce((a,t)=>a+(+t.mins),0);}
+function minsWeek(socia,days){const ss=new Set(days.map(toStr));return tasks.filter(t=>t.socia===socia&&t.estado==='Pendiente'&&ss.has(t.venc)&&t.mins).reduce((a,t)=>a+(+t.mins),0);}
+function capWeek(socia,days){return dispMin(socia)*days.filter(d=>!nonWorking.has(toStr(d))).length;}
+function toggleNonWorking(ds){nonWorking.has(ds)?nonWorking.delete(ds):nonWorking.add(ds);renderCarga();}
+function toggleMitad(s,v){CFG[s].mitad=v;renderCarga();}
+function changeWeek(d){weekOffset+=d;renderCarga();}
+function renderAll(){renderCarga();renderTareas();}
+
+// ── CARGA ────────────────────────────────────────────
+function renderCarga(){
+  const days=getWeekDays(weekOffset);
+  document.getElementById('weekLabel').textContent=fmtRange(days);
+  const socias=Object.keys(CFG);
+  document.getElementById('sociaCards').innerHTML=socias.map(s=>{
+    const cap=capWeek(s,days),used=minsWeek(s,days),p=cap>0?pct(used,cap):0,c=cls(p),cf=CFG[s];
+    const habil=days.filter(d=>!nonWorking.has(toStr(d))).length;
+    return`<div class="socia-card ${c==='ok'?'':c}">
+      <div class="sc-head"><span class="sc-name">${s}</span><span class="sc-badge ${c}">${Math.round(p*100)}%</span></div>
+      <div class="sc-row"><span>Carga semana</span><span>${(used/60).toFixed(1)}h / ${(cap/60).toFixed(0)}h</span></div>
+      <div class="sc-row"><span>Días hábiles</span><span>${habil} de 5</span></div>
+      <div class="bar-bg"><div class="bar-fill ${barCls(p)}" style="width:${Math.min(p,1)*100}%"></div></div>
+      <label class="toggle-row"><input type="checkbox" ${cf.mitad?'checked':''} onchange="toggleMitad('${s}',this.checked)"> Semana al 50%</label>
+    </div>`;
+  }).join('');
+
+  document.getElementById('dayGrid').innerHTML=days.map(day=>{
+    const ds=toStr(day),isT=sameDay(day,today),isNW=nonWorking.has(ds);
+    const dayTasks=tasks.filter(t=>t.venc===ds&&t.estado==='Pendiente').sort((a,b)=>PRIO_ORDER[a.prio||'N']-PRIO_ORDER[b.prio||'N']);
+    const hasTasksOnNW=isNW&&dayTasks.length>0;
+    let dayOver=false,dayWarn=false;
+    if(!isNW){socias.forEach(s=>{const p2=pct(minsDay(s,ds),dispMin(s));if(p2>=1)dayOver=true;else if(p2>=WARN)dayWarn=true;});}
+    else if(hasTasksOnNW)dayOver=true;
+    const capBars=isNW?'':`<div class="day-cap-bars">${socias.map(s=>{const u=minsDay(s,ds),cap=dispMin(s),p2=pct(u,cap),c=cls(p2);return`<div class="ds-row"><div class="ds-name"><span>${s.substring(0,3)}</span><span class="${c}">${u>0?`${(u/60).toFixed(1)}h/${(cap/60).toFixed(0)}h`:'—'}</span></div><div class="dbar-bg"><div class="dbar-fill ${barCls(p2)}" style="width:${u>0?Math.min(p2,1)*100:0}%"></div></div></div>`;}).join('')}</div>`;
+    const chips=dayTasks.length?dayTasks.map(t=>{
+      const u=minsDay(t.socia,ds),cap=isNW?0:dispMin(t.socia),p2=isNW?1:pct(u,cap);
+      const edge=isNW?'chip-over':p2>=1?'chip-over':p2>=WARN?'chip-warn':'';
+      return`<div class="task-chip ${edge}" draggable="${!isNW}" data-id="${t.id}" ondragstart="onDragStart(event,${t.id})" ondragend="onDragEnd()">
+        <div class="chip-top"><span class="chip-socia">${t.socia.substring(0,3)}</span><span class="prio-${t.prio||'N'}">${t.prio||'N'}</span><span class="tipo-chip ${TIPO_CLS[t.tipo||'OTR']}">${t.tipo||'OTR'}</span></div>
+        <div class="chip-tarea">${t.tarea}</div>
+        ${t.mins?`<div class="chip-mins">${t.mins} min</div>`:''}
+      </div>`;
+    }).join(''):`<div class="no-tasks">${isNW?'':'Sin tareas'}</div>`;
+    return`<div class="day-col ${isT?'today-col':''} ${isNW?'non-working':dayOver?'has-over':dayWarn?'has-warn':''}" data-date="${ds}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${ds}')">
+      <div class="day-header"><span class="day-label">${fmtDay(day)}</span><button class="non-hab-btn ${isNW?'active':''}" onclick="toggleNonWorking('${ds}')">${isNW?'Hábil':'No hábil'}</button></div>
+      ${capBars}${chips}${hasTasksOnNW?`<div class="no-hab-warn">Mover estas tareas</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── DRAG & DROP ──────────────────────────────────────
+function onDragStart(e,id){dragId=id;setTimeout(()=>{const el=document.querySelector(`.task-chip[data-id="${id}"]`);if(el)el.classList.add('dragging');},0);e.dataTransfer.effectAllowed='move';}
+function onDragEnd(){document.querySelectorAll('.task-chip.dragging').forEach(el=>el.classList.remove('dragging'));document.querySelectorAll('.day-col.drag-over').forEach(el=>el.classList.remove('drag-over'));dragId=null;}
+function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+async function onDrop(e,ds){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(dragId===null)return;
+  const t=tasks.find(t=>t.id==dragId);
+  if(t&&t.venc!==ds){
+    t.venc=ds;
+    renderAll();
+    setStatus('Guardando...','');
+    await apiSave(t);
+    setStatus('Guardado ✓','ok');
+  }
+  dragId=null;
+}
+
+// ── TAREAS ───────────────────────────────────────────
+function vcCls(s){const d=parseDate(s);if(!d)return'vc-ok';if(d<today)return'vc-vencido';if(sameDay(d,today))return'vc-hoy';return(d-today)/86400000<=3?'vc-pronto':'vc-ok';}
+function getF(){return{q:document.getElementById('search').value.toLowerCase(),socia:document.getElementById('filtSocia').value,estado:document.getElementById('filtEstado').value,prio:document.getElementById('filtPrio').value,tipo:document.getElementById('filtTipo').value,cliente:document.getElementById('filtCliente').value};}
+function filteredTasks(){const f=getF();return tasks.filter(t=>{if(f.socia&&t.socia!==f.socia)return false;if(f.estado&&t.estado!==f.estado)return false;if(f.prio&&(t.prio||'N')!==f.prio)return false;if(f.tipo&&(t.tipo||'OTR')!==f.tipo)return false;if(f.cliente&&t.cliente!==f.cliente)return false;if(f.q&&!t.tarea.toLowerCase().includes(f.q)&&!t.cliente.toLowerCase().includes(f.q))return false;return true;});}
+function populateClientes(){const sel=document.getElementById('filtCliente'),cur=sel.value,cl=[...new Set(tasks.map(t=>t.cliente))].sort();sel.innerHTML='<option value="">Todos los clientes</option>'+cl.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');}
+
+function renderTareas(){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('taskTable').style.display='table';
+  populateClientes();
+  const pend=tasks.filter(t=>t.estado==='Pendiente');
+  document.getElementById('mVenc').textContent=pend.filter(t=>{const d=parseDate(t.venc);return d&&d<today;}).length;
+  document.getElementById('mHoy').textContent=pend.filter(t=>{const d=parseDate(t.venc);return d&&sameDay(d,today);}).length;
+  document.getElementById('mPend').textContent=pend.length;
+  document.getElementById('mReal').textContent=tasks.filter(t=>t.estado==='Realizado').length;
+  const rows=filteredTasks();
+  const tb=document.getElementById('tbody');
+  if(!rows.length){tb.innerHTML='';document.getElementById('emptyMsg').style.display='block';return;}
+  document.getElementById('emptyMsg').style.display='none';
+  const sorted=[...rows].sort((a,b)=>{if(a.estado!==b.estado)return a.estado==='Pendiente'?-1:1;const po=PRIO_ORDER[a.prio||'N']-PRIO_ORDER[b.prio||'N'];if(po!==0)return po;const da=parseDate(a.venc),db=parseDate(b.venc);if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;});
+  tb.innerHTML=sorted.map(t=>{
+    const done=t.estado==='Realizado',nw=nonWorking.has(t.venc);
+    return`<tr class="${done?'done':''}" onclick="openModal(${t.id})">
+      <td><span class="${PRIO_PILL[t.prio||'N']}"></span>${PRIO_LABEL[t.prio||'N']}</td>
+      <td><span class="badge b-socia">${t.socia.substring(0,3)}</span></td>
+      <td style="color:#888;font-size:11px">${t.cliente}</td>
+      <td class="wrap"><span>${t.tarea}</span>${t.coment?`<div class="nota-prev">${t.coment}</div>`:''}</td>
+      <td><span class="tipo-chip ${TIPO_CLS[t.tipo||'OTR']}">${TIPO_LABEL[t.tipo||'OTR']}</span></td>
+      <td class="${nw?'vc-vencido':vcCls(t.venc)}" style="font-size:11px">${fmtDate(t.venc)}${nw?' 🚫':''}</td>
+      <td style="font-size:11px;color:#999">${t.mins?t.mins+' m':'-'}</td>
+      <td><span class="badge ${done?'b-done':'b-pend'}">${done?'Listo':'Pend.'}</span></td>
+      <td><button onclick="event.stopPropagation();toggleEstado(${t.id})" style="font-size:11px;padding:2px 8px;border-radius:6px;border:0.5px solid #ddd;background:transparent;cursor:pointer">${done?'Reabrir':'✓ Listo'}</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function toggleEstado(id){
+  const t=tasks.find(t=>t.id==id);
+  if(!t)return;
+  t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
+  renderAll();
+  setStatus('Guardando...','');
+  await apiSave(t);
+  setStatus('Guardado ✓','ok');
+}
+
+// ── MODAL ────────────────────────────────────────────
+function openModal(id=null){
+  editId=id;
+  const t=id!==null?tasks.find(t=>t.id==id):null;
+  document.getElementById('modalTitle').textContent=t?'Editar tarea':'Nueva tarea';
+  document.getElementById('fSocia').value=t?t.socia:'Julieta';
+  document.getElementById('fPrio').value=t?(t.prio||'N'):'N';
+  document.getElementById('fCliente').value=t?t.cliente:'';
+  document.getElementById('fTipo').value=t?(t.tipo||'OTR'):'OTR';
+  document.getElementById('fTarea').value=t?t.tarea:'';
+  document.getElementById('fVenc').value=t?t.venc:'';
+  document.getElementById('fMins').value=t&&t.mins?t.mins:'';
+  document.getElementById('fEstado').value=t?t.estado:'Pendiente';
+  document.getElementById('fComent').value=t?t.coment:'';
+  document.getElementById('btnDel').style.display=t?'block':'none';
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');editId=null;}
+
+async function saveTask(){
+  const btn=document.getElementById('btnSave');
+  btn.disabled=true;btn.textContent='Guardando...';
+  const obj={
+    socia:document.getElementById('fSocia').value,
+    prio:document.getElementById('fPrio').value,
+    cliente:document.getElementById('fCliente').value,
+    tipo:document.getElementById('fTipo').value,
+    tarea:document.getElementById('fTarea').value,
+    venc:document.getElementById('fVenc').value,
+    mins:parseInt(document.getElementById('fMins').value)||null,
+    estado:document.getElementById('fEstado').value,
+    coment:document.getElementById('fComent').value,
+  };
+  if(!obj.tarea||!obj.cliente){alert('Completá al menos cliente y tarea.');btn.disabled=false;btn.textContent='Guardar';return;}
+  if(editId!==null) obj.id=editId;
+  try{
+    const res=await apiSave(obj);
+    if(!editId&&res.id) obj.id=res.id;
+    if(editId){const i=tasks.findIndex(t=>t.id==editId);if(i>=0)tasks[i]=obj;}
+    else tasks.push(obj);
+    closeModal();renderAll();setStatus('Guardado ✓','ok');
+  }catch(e){setStatus('Error al guardar','err');}
+  btn.disabled=false;btn.textContent='Guardar';
+}
+
+async function deleteTask(){
+  if(!editId)return;
+  if(!confirm('¿Eliminar esta tarea?'))return;
+  setStatus('Eliminando...','');
+  await apiDelete(editId);
+  tasks=tasks.filter(t=>t.id!=editId);
+  closeModal();renderAll();setStatus('Eliminado ✓','ok');
+}
+
+// ── EVENTOS ──────────────────────────────────────────
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('tabCarga').style.display=tab==='carga'?'block':'none';
+  document.getElementById('tabTareas').style.display=tab==='tareas'?'block':'none';
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&tab==='carga')||(i===1&&tab==='tareas')));
+}
+['search','filtSocia','filtEstado','filtPrio','filtTipo','filtCliente'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',renderTareas),el.addEventListener('change',renderTareas);
+});
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===document.getElementById('modalBg'))closeModal();});
+
+// Arrancar
+loadData();
+</script>
+</body>
+</html>

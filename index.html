@@ -479,9 +479,17 @@ function renderTareas(){
 async function toggleEstado(id){
   const t=tasks.find(t=>t.id==id);if(!t)return;
   t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
-  renderAll();setStatus('Guardando...','');
-  await apiCall({action:'updateTarea',data:JSON.stringify(t)});
-  setStatus('Guardado ✓','ok');
+  renderAll(); // actualiza pantalla inmediatamente
+  setStatus('Guardando...','');
+  try{
+    await apiCall({action:'updateTarea',data:JSON.stringify(t)});
+    setStatus('Guardado ✓','ok');
+  }catch(e){
+    // si falla, revertir
+    t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
+    renderAll();
+    setStatus('Error al guardar','err');
+  }
 }
 
 // ── MODAL ─────────────────────────────────────────────
@@ -559,9 +567,19 @@ async function saveTask(){
   };
   if(editId!==null)obj.id=editId;
   try{
-    const res=await apiCall({action:editId?'updateTarea':'saveTarea',data:JSON.stringify(obj)});
-    await loadData(); // recargar para obtener IDs correctos (especialmente si hay socia2)
-    closeModal();setStatus('Guardado ✓','ok');
+    if(editId!==null){
+      // actualizar en memoria inmediatamente
+      const idx=tasks.findIndex(t=>t.id==editId);
+      if(idx>=0)tasks[idx]={...tasks[idx],...obj};
+      closeModal();renderAll();setStatus('Guardando...','');
+      await apiCall({action:'updateTarea',data:JSON.stringify(obj)});
+      setStatus('Guardado ✓','ok');
+    } else {
+      closeModal();setStatus('Guardando...','');
+      await apiCall({action:'saveTarea',data:JSON.stringify(obj)});
+      await loadData(); // solo para nuevas tareas (necesitamos el ID real)
+      setStatus('Guardado ✓','ok');
+    }
   }catch(e){setStatus('Error al guardar','err');}
   btn.disabled=false;btn.textContent='Guardar';
 }

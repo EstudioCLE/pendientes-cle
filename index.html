@@ -17,8 +17,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tabs{display:flex;border-bottom:0.5px solid #ddd;margin-bottom:16px;background:#fff;border-radius:10px 10px 0 0;padding:0 16px}
 .tab{padding:10px 18px;cursor:pointer;font-size:13px;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:500}
-
-/* CARGA */
 .week-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .week-nav button{padding:5px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;cursor:pointer;font-size:12px}
 .week-nav button:hover{background:#f0efe9}
@@ -54,7 +52,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .today-col .day-label{color:#185FA5}
 .non-working .day-label{text-decoration:line-through}
 .non-hab-btn{font-size:10px;padding:1px 6px;border-radius:5px;border:0.5px solid #ddd;background:transparent;color:#999;cursor:pointer;line-height:1.6}
-.non-hab-btn:hover{background:#f5f4f0}
 .non-hab-btn.active{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}
 .day-cap-bars{margin-bottom:6px}
 .ds-row{margin-bottom:3px}
@@ -70,8 +67,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .chip-socia{font-size:10px;font-weight:500;color:#3C3489;background:#EEEDFE;padding:1px 5px;border-radius:8px}
 .chip-cliente{font-size:10px;color:#888;margin-bottom:2px}
 .chip-tarea{color:#1a1a1a;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.chip-bottom{display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap}
-.chip-mins{font-size:10px;color:#999}
+.chip-mins{font-size:10px;color:#999;margin-top:2px}
 .prio-U{font-size:9px;padding:1px 4px;border-radius:4px;background:#FCEBEB;color:#A32D2D;font-weight:500}
 .prio-N{font-size:9px;padding:1px 4px;border-radius:4px;background:#FAEEDA;color:#854F0B;font-weight:500}
 .prio-P{font-size:9px;padding:1px 4px;border-radius:4px;background:#EAF3DE;color:#3B6D11;font-weight:500}
@@ -81,18 +77,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tipo-ADM{background:#EAF3DE;color:#3B6D11}.tipo-OTR{background:#f0efe9;color:#666}
 .no-tasks{font-size:10px;color:#bbb;text-align:center;padding:8px 0}
 .no-hab-warn{font-size:10px;color:#A32D2D;text-align:center;padding:4px;background:#FCEBEB;border-radius:5px;margin-top:4px}
-
-/* TAREAS */
 .toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 12px;align-items:center}
 .toolbar input,.toolbar select{font-size:12px;padding:5px 9px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;height:31px}
-.toolbar input{min-width:120px}
-.toolbar input.search-input{flex:1}
+.toolbar input{min-width:120px;flex:1}
 .add-btn{padding:5px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;cursor:pointer;font-size:12px;height:31px;font-weight:500;white-space:nowrap}
 .add-btn:hover{background:#f0efe9}
 .date-filter-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:0 0 10px}
 .date-filter-row label{font-size:11px;color:#888}
 .date-quick{padding:4px 10px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;cursor:pointer;font-size:11px;color:#555}
-.date-quick:hover,.date-quick.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.date-quick.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.range-inputs{display:none;gap:5px;align-items:center}
+.range-inputs.show{display:flex}
+.range-inputs input{height:28px;font-size:11px;padding:2px 6px;border-radius:6px;border:0.5px solid #d0cdc4}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 .metric{background:#fff;border-radius:10px;padding:10px 14px;border:0.5px solid #e0ddd4}
 .metric .lbl{font-size:11px;color:#888;margin-bottom:3px}
@@ -113,14 +109,10 @@ td.wrap{white-space:normal;line-height:1.4}
 .prio-pill-U{display:inline-block;width:8px;height:8px;border-radius:2px;background:#E24B4A;margin-right:3px;vertical-align:middle}
 .prio-pill-N{display:inline-block;width:8px;height:8px;border-radius:2px;background:#EF9F27;margin-right:3px;vertical-align:middle}
 .prio-pill-P{display:inline-block;width:8px;height:8px;border-radius:2px;background:#639922;margin-right:3px;vertical-align:middle}
-.icon-delegado{font-size:12px;margin-left:3px;title:'Delegado a pasante'}
-.icon-seguimiento{font-size:12px;margin-left:2px}
 .empty{padding:32px;text-align:center;color:#aaa}
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;gap:10px;color:#888}
 .spinner{width:18px;height:18px;border:2px solid #e0ddd4;border-top-color:#185FA5;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:14px;border:0.5px solid #e0ddd4;padding:22px;width:520px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12)}
@@ -130,11 +122,8 @@ td.wrap{white-space:normal;line-height:1.4}
 .field input,.field select,.field textarea{width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid #d0cdc4;background:#fff;color:#1a1a1a;font-size:13px;font-family:inherit}
 .field textarea{resize:vertical;min-height:54px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.check-row{display:flex;align-items:center;gap:8px;font-size:13px;color:#1a1a1a;padding:4px 0}
+.check-row{display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 0}
 .check-row input[type=checkbox]{width:16px;height:16px;accent-color:#185FA5;cursor:pointer}
-.cliente-wrap{position:relative}
-.cliente-wrap input{width:100%}
 .cliente-new-btn{margin-top:5px;font-size:11px;color:#185FA5;cursor:pointer;background:none;border:none;padding:0;text-decoration:underline}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
 .btn-save{padding:8px 20px;border-radius:8px;border:none;background:#185FA5;color:#fff;font-size:13px;cursor:pointer;font-weight:500}
@@ -142,7 +131,6 @@ td.wrap{white-space:normal;line-height:1.4}
 .btn-save:disabled{opacity:.5;cursor:not-allowed}
 .btn-cancel{padding:8px 14px;border-radius:8px;border:0.5px solid #d0cdc4;background:transparent;color:#1a1a1a;font-size:13px;cursor:pointer}
 .btn-del{padding:8px 14px;border-radius:8px;border:0.5px solid #F7C1C1;background:transparent;color:#A32D2D;font-size:13px;cursor:pointer;margin-right:auto}
-.sep{width:1px;height:14px;background:#e0ddd4;margin:0 4px}
 </style>
 </head>
 <body>
@@ -159,7 +147,6 @@ td.wrap{white-space:normal;line-height:1.4}
     <div class="tab" onclick="switchTab('tareas')">Tareas</div>
   </div>
 
-  <!-- TAB CARGA -->
   <div id="tabCarga">
     <div class="week-nav">
       <button onclick="changeWeek(-1)">← Sem. ant.</button>
@@ -173,21 +160,14 @@ td.wrap{white-space:normal;line-height:1.4}
       <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Urgente</span>
       <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Normal</span>
       <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Puede esperar</span>
-      <span class="sep"></span>
-      <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Facturación</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD"></span>Societario</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Litigios</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#BA7517"></span>Prop. Industrial</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Admin.</span>
-      <span class="sep"></span>
+      <span style="width:1px;height:14px;background:#e0ddd4;margin:0 4px"></span>
       <span class="legend-item">👤 Delegado</span>
       <span class="legend-item">🔔 Seguimiento</span>
     </div>
-    <div class="hint">Arrastrá tareas entre días para redistribuir. Los cambios se guardan automáticamente.</div>
+    <div class="hint">Arrastrá tareas entre días para redistribuir. Los cambios se guardan en Google Sheets.</div>
     <div class="day-grid" id="dayGrid"></div>
   </div>
 
-  <!-- TAB TAREAS -->
   <div id="tabTareas" style="display:none">
     <div class="metrics">
       <div class="metric danger"><div class="lbl">Vencidas</div><div class="val" id="mVenc">—</div></div>
@@ -195,8 +175,6 @@ td.wrap{white-space:normal;line-height:1.4}
       <div class="metric"><div class="lbl">Pendientes</div><div class="val" id="mPend">—</div></div>
       <div class="metric"><div class="lbl">Realizadas</div><div class="val" id="mReal">—</div></div>
     </div>
-
-    <!-- Filtro fechas rápido -->
     <div class="date-filter-row">
       <label>Período:</label>
       <button class="date-quick active" onclick="setDateFilter('all',this)">Todas</button>
@@ -204,22 +182,21 @@ td.wrap{white-space:normal;line-height:1.4}
       <button class="date-quick" onclick="setDateFilter('week',this)">Esta semana</button>
       <button class="date-quick" onclick="setDateFilter('next',this)">Próxima semana</button>
       <button class="date-quick" onclick="setDateFilter('range',this)">Rango</button>
-      <span id="rangeInputs" style="display:none;gap:5px;align-items:center;display:none">
-        <input type="date" id="dateFrom" style="height:28px;font-size:11px;padding:2px 6px" onchange="renderTareas()">
+      <div class="range-inputs" id="rangeInputs">
+        <input type="date" id="dateFrom" onchange="renderTareas()">
         <span style="font-size:11px;color:#888">→</span>
-        <input type="date" id="dateTo" style="height:28px;font-size:11px;padding:2px 6px" onchange="renderTareas()">
-      </span>
+        <input type="date" id="dateTo" onchange="renderTareas()">
+      </div>
     </div>
-
     <div class="toolbar">
-      <input type="text" class="search-input" id="search" placeholder="Buscar tarea o cliente...">
+      <input type="text" id="search" placeholder="Buscar tarea o cliente...">
       <select id="filtSocia"><option value="">Todas las socias</option><option>Julieta</option><option>Carolina</option><option>Luisina</option></select>
       <select id="filtEstado"><option value="">Todo estado</option><option value="Pendiente">Pendiente</option><option value="Realizado">Realizado</option></select>
       <select id="filtPrio"><option value="">Toda prioridad</option><option value="U">Urgente</option><option value="N">Normal</option><option value="P">Puede esperar</option></select>
       <select id="filtTipo"><option value="">Todo tipo</option><option value="FAC">Facturación</option><option value="SOC">Societario</option><option value="LIT">Litigios</option><option value="PI">Prop. Industrial</option><option value="ADM">Administrativo</option><option value="OTR">Otro</option></select>
       <select id="filtCliente"></select>
-      <select id="filtSeguimiento"><option value="">Todo</option><option value="Si">Con seguimiento</option><option value="No">Sin seguimiento</option></select>
-      <select id="filtDelegado"><option value="">Todo</option><option value="Si">Delegadas</option><option value="No">No delegadas</option></select>
+      <select id="filtSeguimiento"><option value="">Todo</option><option value="Si">Con seguimiento</option></select>
+      <select id="filtDelegado"><option value="">Todo</option><option value="Si">Delegadas</option></select>
       <button class="add-btn" onclick="openModal()">+ Nueva tarea</button>
     </div>
     <div class="table-wrap">
@@ -243,7 +220,6 @@ td.wrap{white-space:normal;line-height:1.4}
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3 id="modalTitle">Nueva tarea</h3>
@@ -257,11 +233,9 @@ td.wrap{white-space:normal;line-height:1.4}
     </div>
     <div class="field">
       <label>Cliente</label>
-      <div class="cliente-wrap">
-        <select id="fClienteSel" onchange="onClienteSelChange()"></select>
-        <input type="text" id="fClienteNew" placeholder="Escribí el nombre del cliente nuevo..." style="display:none;margin-top:6px">
-        <button class="cliente-new-btn" id="btnNuevoCliente" onclick="toggleNuevoCliente()">+ Agregar cliente nuevo</button>
-      </div>
+      <select id="fClienteSel" onchange="onClienteSelChange()"></select>
+      <input type="text" id="fClienteNew" placeholder="Nombre del cliente nuevo..." style="display:none;margin-top:6px;width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid #d0cdc4;font-size:13px;font-family:inherit">
+      <button class="cliente-new-btn" id="btnNuevoCliente" onclick="toggleNuevoCliente()">+ Agregar cliente nuevo</button>
     </div>
     <div class="field"><label>Tarea</label><input id="fTarea"></div>
     <div class="field-row">
@@ -283,39 +257,71 @@ td.wrap{white-space:normal;line-height:1.4}
 </div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbzOucEcIxwQtFmqVZK0dNqPVLr7Am4wKZjba20QyWHWx4BbkTQdx4lzt7J_o6YTKC704Q/exec';
-const CFG={Julieta:{horas:8,mitad:false},Carolina:{horas:8,mitad:false},Luisina:{horas:4,mitad:false}};
-const WARN=0.75;
-const nonWorking=new Set();
-const PRIO_ORDER={U:0,N:1,P:2};
-const PRIO_LABEL={U:'Urgente',N:'Normal',P:'Puede esperar'};
-const PRIO_PILL={U:'prio-pill-U',N:'prio-pill-N',P:'prio-pill-P'};
-const TIPO_LABEL={FAC:'Facturación',SOC:'Societario',LIT:'Litigios',PI:'Prop. Ind.',ADM:'Admin.',OTR:'Otro'};
-const TIPO_CLS={FAC:'tipo-FAC',SOC:'tipo-SOC',LIT:'tipo-LIT',PI:'tipo-PI',ADM:'tipo-ADM',OTR:'tipo-OTR'};
-const MONTHS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-const DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const API = 'https://script.google.com/macros/s/AKfycbzOucEcIxwQtFmqVZK0dNqPVLr7Am4wKZjba20QyWHWx4BbkTQdx4lzt7J_o6YTKC704Q/exec';
+const CFG = {Julieta:{horas:8,mitad:false},Carolina:{horas:8,mitad:false},Luisina:{horas:4,mitad:false}};
+const WARN = 0.75;
+const nonWorking = new Set();
+const PRIO_ORDER = {U:0,N:1,P:2};
+const PRIO_LABEL = {U:'Urgente',N:'Normal',P:'Puede esperar'};
+const PRIO_PILL = {U:'prio-pill-U',N:'prio-pill-N',P:'prio-pill-P'};
+const TIPO_LABEL = {FAC:'Facturación',SOC:'Societario',LIT:'Litigios',PI:'Prop. Ind.',ADM:'Admin.',OTR:'Otro'};
+const TIPO_CLS = {FAC:'tipo-FAC',SOC:'tipo-SOC',LIT:'tipo-LIT',PI:'tipo-PI',ADM:'tipo-ADM',OTR:'tipo-OTR'};
+const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const DAYS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
-let tasks=[],clientes=[],editId=null,weekOffset=0,activeTab='carga',dragId=null;
-let dateFilter='all';
-const today=new Date();today.setHours(0,0,0,0);
+let tasks = [], clientes = [], editId = null, weekOffset = 0, dragId = null, dateFilter = 'all';
+const today = new Date(); today.setHours(0,0,0,0);
 
-// ── API ──────────────────────────────────────────────
-function apiCall(params){
-  const url=API+'?'+Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-  return fetch(url).then(r=>r.json());
+// ── API ───────────────────────────────────────────────
+function apiCall(params) {
+  const qs = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  return fetch(API + '?' + qs).then(r => r.json());
 }
-async function loadData(){
+
+async function loadData() {
   setStatus('Sincronizando...','');
-  try{
-    const [rT,rC]=await Promise.all([apiCall({action:'getTareas'}),apiCall({action:'getClientes'})]);
-    if(rT.error)throw new Error(rT.error);
-    tasks=rT.tareas;
-    clientes=rC.clientes||[];
+  try {
+    const [rT, rC] = await Promise.all([
+      apiCall({action:'getTareas'}),
+      apiCall({action:'getClientes'})
+    ]);
+    if (rT.error) throw new Error(rT.error);
+    tasks = rT.tareas || [];
+    clientes = rC.clientes || [];
     setStatus('Sincronizado ✓','ok');
     renderAll();
-  }catch(e){setStatus('Error al sincronizar','err');console.error(e);}
+  } catch(e) {
+    console.error('loadData error:', e);
+    setStatus('Error al sincronizar','err');
+  }
 }
-function setStatus(msg,cls){const el=document.getElementById('syncStatus');el.textContent=msg;el.className='sync-status '+cls;}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('syncStatus');
+  el.textContent = msg;
+  el.className = 'sync-status ' + cls;
+}
+
+// Guardar en Sheets y actualizar en memoria inmediatamente
+async function apiUpdate(task) {
+  // Actualizar en memoria de inmediato
+  const idx = tasks.findIndex(t => String(t.id) === String(task.id));
+  if (idx >= 0) tasks[idx] = {...tasks[idx], ...task};
+  renderAll();
+  setStatus('Guardando...','');
+  try {
+    const res = await apiCall({action:'updateTarea', data: JSON.stringify(task)});
+    if (res.error) {
+      console.error('apiUpdate error:', res.error);
+      setStatus('⚠ Error: ' + res.error,'err');
+    } else {
+      setStatus('Guardado ✓','ok');
+    }
+  } catch(e) {
+    console.error('apiUpdate fetch error:', e);
+    setStatus('Error de conexión','err');
+  }
+}
 
 // ── UTILS ─────────────────────────────────────────────
 function getWeekDays(off=0){const d=new Date(today),dow=d.getDay(),mon=new Date(d);mon.setDate(d.getDate()-(dow===0?6:dow-1)+off*7);return Array.from({length:5},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});}
@@ -338,39 +344,39 @@ function changeWeek(d){weekOffset+=d;renderCarga();}
 function renderAll(){renderCarga();renderTareas();}
 
 // ── FILTRO FECHAS ─────────────────────────────────────
-function setDateFilter(f,btn){
-  dateFilter=f;
-  document.querySelectorAll('.date-quick').forEach(b=>b.classList.remove('active'));
+function setDateFilter(f, btn) {
+  dateFilter = f;
+  document.querySelectorAll('.date-quick').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const ri=document.getElementById('rangeInputs');
-  ri.style.display=f==='range'?'flex':'none';
+  document.getElementById('rangeInputs').classList.toggle('show', f === 'range');
   renderTareas();
 }
-function inDateFilter(venc){
-  if(dateFilter==='all')return true;
-  const d=parseDate(venc);if(!d)return dateFilter==='all';
-  if(dateFilter==='today')return sameDay(d,today);
-  if(dateFilter==='week'){const days=getWeekDays(0);return d>=days[0]&&d<=days[4];}
-  if(dateFilter==='next'){const days=getWeekDays(1);return d>=days[0]&&d<=days[4];}
-  if(dateFilter==='range'){
-    const from=parseDate(document.getElementById('dateFrom').value);
-    const to=parseDate(document.getElementById('dateTo').value);
-    if(from&&d<from)return false;
-    if(to&&d>to)return false;
+function inDateFilter(venc) {
+  if (dateFilter === 'all') return true;
+  const d = parseDate(venc); if (!d) return false;
+  if (dateFilter === 'today') return sameDay(d, today);
+  if (dateFilter === 'week') {const days=getWeekDays(0);return d>=days[0]&&d<=days[4];}
+  if (dateFilter === 'next') {const days=getWeekDays(1);return d>=days[0]&&d<=days[4];}
+  if (dateFilter === 'range') {
+    const from = parseDate(document.getElementById('dateFrom').value);
+    const to = parseDate(document.getElementById('dateTo').value);
+    if (from && d < from) return false;
+    if (to && d > to) return false;
     return true;
   }
   return true;
 }
 
 // ── CARGA ─────────────────────────────────────────────
-function renderCarga(){
-  const days=getWeekDays(weekOffset);
-  document.getElementById('weekLabel').textContent=fmtRange(days);
-  const socias=Object.keys(CFG);
-  document.getElementById('sociaCards').innerHTML=socias.map(s=>{
+function renderCarga() {
+  const days = getWeekDays(weekOffset);
+  document.getElementById('weekLabel').textContent = fmtRange(days);
+  const socias = Object.keys(CFG);
+
+  document.getElementById('sociaCards').innerHTML = socias.map(s => {
     const cap=capWeek(s,days),used=minsWeek(s,days),p=cap>0?pct(used,cap):0,c=cls(p),cf=CFG[s];
     const habil=days.filter(d=>!nonWorking.has(toStr(d))).length;
-    return`<div class="socia-card ${c==='ok'?'':c}">
+    return `<div class="socia-card ${c==='ok'?'':c}">
       <div class="sc-head"><span class="sc-name">${s}</span><span class="sc-badge ${c}">${Math.round(p*100)}%</span></div>
       <div class="sc-row"><span>Carga semana</span><span>${(used/60).toFixed(1)}h / ${(cap/60).toFixed(0)}h</span></div>
       <div class="sc-row"><span>Días hábiles</span><span>${habil} de 5</span></div>
@@ -379,20 +385,20 @@ function renderCarga(){
     </div>`;
   }).join('');
 
-  document.getElementById('dayGrid').innerHTML=days.map(day=>{
+  document.getElementById('dayGrid').innerHTML = days.map(day => {
     const ds=toStr(day),isT=sameDay(day,today),isNW=nonWorking.has(ds);
     const dayTasks=tasks.filter(t=>t.venc===ds&&t.estado==='Pendiente').sort((a,b)=>PRIO_ORDER[a.prio||'N']-PRIO_ORDER[b.prio||'N']);
-    const hasTasksOnNW=isNW&&dayTasks.length>0;
+    const hasNWtasks=isNW&&dayTasks.length>0;
     let dayOver=false,dayWarn=false;
     if(!isNW){socias.forEach(s=>{const p2=pct(minsDay(s,ds),dispMin(s));if(p2>=1)dayOver=true;else if(p2>=WARN)dayWarn=true;});}
-    else if(hasTasksOnNW)dayOver=true;
+    else if(hasNWtasks)dayOver=true;
     const capBars=isNW?'':`<div class="day-cap-bars">${socias.map(s=>{const u=minsDay(s,ds),cap=dispMin(s),p2=pct(u,cap),c=cls(p2);return`<div class="ds-row"><div class="ds-name"><span>${s.substring(0,3)}</span><span class="${c}">${u>0?`${(u/60).toFixed(1)}h/${(cap/60).toFixed(0)}h`:'—'}</span></div><div class="dbar-bg"><div class="dbar-fill ${barCls(p2)}" style="width:${u>0?Math.min(p2,1)*100:0}%"></div></div></div>`;}).join('')}</div>`;
     const chips=dayTasks.length?dayTasks.map(t=>{
       const u=minsDay(t.socia,ds),cap=isNW?0:dispMin(t.socia),p2=isNW?1:pct(u,cap);
       const edge=isNW?'chip-over':p2>=1?'chip-over':p2>=WARN?'chip-warn':'';
-      const icons=(t.delegado==='Si'?'👤':'')+' '+(t.seguimiento==='Si'?'🔔':'');
+      const icons=(t.delegado==='Si'?'👤 ':'')+( t.seguimiento==='Si'?'🔔':'');
       return`<div class="task-chip ${edge}" draggable="${!isNW}" data-id="${t.id}" ondragstart="onDragStart(event,${t.id})" ondragend="onDragEnd()">
-        <div class="chip-top"><span class="chip-socia">${t.socia.substring(0,3)}</span><span class="prio-${t.prio||'N'}">${t.prio||'N'}</span><span class="tipo-chip ${TIPO_CLS[t.tipo||'OTR']}">${t.tipo||'OTR'}</span>${icons.trim()?`<span style="font-size:11px">${icons.trim()}</span>`:''}</div>
+        <div class="chip-top"><span class="chip-socia">${t.socia.substring(0,3)}</span><span class="prio-${t.prio||'N'}">${t.prio||'N'}</span><span class="tipo-chip ${TIPO_CLS[t.tipo||'OTR']}">${t.tipo||'OTR'}</span>${icons.trim()?`<span>${icons.trim()}</span>`:''}</div>
         <div class="chip-cliente">${t.cliente}</div>
         <div class="chip-tarea">${t.tarea}</div>
         ${t.mins?`<div class="chip-mins">${t.mins} min</div>`:''}
@@ -400,7 +406,7 @@ function renderCarga(){
     }).join(''):`<div class="no-tasks">${isNW?'':'Sin tareas'}</div>`;
     return`<div class="day-col ${isT?'today-col':''} ${isNW?'non-working':dayOver?'has-over':dayWarn?'has-warn':''}" data-date="${ds}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${ds}')">
       <div class="day-header"><span class="day-label">${fmtDay(day)}</span><button class="non-hab-btn ${isNW?'active':''}" onclick="toggleNonWorking('${ds}')">${isNW?'Hábil':'No hábil'}</button></div>
-      ${capBars}${chips}${hasTasksOnNW?`<div class="no-hab-warn">Mover estas tareas</div>`:''}
+      ${capBars}${chips}${hasNWtasks?`<div class="no-hab-warn">Mover estas tareas</div>`:''}
     </div>`;
   }).join('');
 }
@@ -410,17 +416,30 @@ function onDragStart(e,id){dragId=id;setTimeout(()=>{const el=document.querySele
 function onDragEnd(){document.querySelectorAll('.task-chip.dragging').forEach(el=>el.classList.remove('dragging'));document.querySelectorAll('.day-col.drag-over').forEach(el=>el.classList.remove('drag-over'));dragId=null;}
 function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
 function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
-async function onDrop(e,ds){
-  e.preventDefault();e.currentTarget.classList.remove('drag-over');
-  if(dragId===null)return;
-  const t=tasks.find(t=>t.id==dragId);
-  if(t&&t.venc!==ds){t.venc=ds;renderAll();setStatus('Guardando...','');await apiCall({action:'updateTarea',data:JSON.stringify(t)});setStatus('Guardado ✓','ok');}
-  dragId=null;
+async function onDrop(e, ds) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  if (dragId === null) return;
+  const t = tasks.find(t => String(t.id) === String(dragId));
+  if (t && t.venc !== ds) {
+    await apiUpdate({...t, venc: ds});
+  }
+  dragId = null;
 }
 
 // ── TAREAS ────────────────────────────────────────────
 function vcCls(s){const d=parseDate(s);if(!d)return'vc-ok';if(d<today)return'vc-vencido';if(sameDay(d,today))return'vc-hoy';return(d-today)/86400000<=3?'vc-pronto':'vc-ok';}
-function getF(){return{q:document.getElementById('search').value.toLowerCase(),socia:document.getElementById('filtSocia').value,estado:document.getElementById('filtEstado').value,prio:document.getElementById('filtPrio').value,tipo:document.getElementById('filtTipo').value,cliente:document.getElementById('filtCliente').value,seguimiento:document.getElementById('filtSeguimiento').value,delegado:document.getElementById('filtDelegado').value};}
+
+function getF(){return{
+  q:document.getElementById('search').value.toLowerCase(),
+  socia:document.getElementById('filtSocia').value,
+  estado:document.getElementById('filtEstado').value,
+  prio:document.getElementById('filtPrio').value,
+  tipo:document.getElementById('filtTipo').value,
+  cliente:document.getElementById('filtCliente').value,
+  seguimiento:document.getElementById('filtSeguimiento').value,
+  delegado:document.getElementById('filtDelegado').value
+};}
+
 function filteredTasks(){
   const f=getF();
   return tasks.filter(t=>{
@@ -436,8 +455,10 @@ function filteredTasks(){
     return true;
   });
 }
+
 function populateClientes(){
-  const sel=document.getElementById('filtCliente'),cur=sel.value,cl=[...new Set(tasks.map(t=>t.cliente))].sort();
+  const sel=document.getElementById('filtCliente'),cur=sel.value;
+  const cl=[...new Set(tasks.map(t=>t.cliente).filter(Boolean))].sort();
   sel.innerHTML='<option value="">Todos los clientes</option>'+cl.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
 }
 
@@ -457,62 +478,44 @@ function renderTareas(){
   const sorted=[...rows].sort((a,b)=>{
     if(a.estado!==b.estado)return a.estado==='Pendiente'?-1:1;
     const po=PRIO_ORDER[a.prio||'N']-PRIO_ORDER[b.prio||'N'];if(po!==0)return po;
-    const da=parseDate(a.venc),db=parseDate(b.venc);if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;
+    const da=parseDate(a.venc),db=parseDate(b.venc);
+    if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;
   });
   tb.innerHTML=sorted.map(t=>{
     const done=t.estado==='Realizado',nw=nonWorking.has(t.venc);
-    const icons=(t.delegado==='Si'?'<span title="Delegado a pasante">👤</span>':'')+(t.seguimiento==='Si'?'<span title="Requiere seguimiento">🔔</span>':'');
-    return`<tr class="${done?'done':''}" onclick="openModal(${t.id})">
+    const icons=(t.delegado==='Si'?'<span title="Delegado">👤</span> ':'')+( t.seguimiento==='Si'?'<span title="Seguimiento">🔔</span>':'');
+    return`<tr class="${done?'done':''}" onclick="openModal('${t.id}')">
       <td><span class="${PRIO_PILL[t.prio||'N']}"></span>${PRIO_LABEL[t.prio||'N']}</td>
       <td><span class="badge b-socia">${t.socia.substring(0,3)}</span></td>
       <td style="color:#888;font-size:11px">${t.cliente}</td>
-      <td class="wrap"><span>${t.tarea}</span>${icons?`<span style="margin-left:4px">${icons}</span>`:''}${t.coment?`<div class="nota-prev">${t.coment}</div>`:''}</td>
+      <td class="wrap"><span>${t.tarea}</span>${icons?`<span style="margin-left:4px">${icons}</span>`:''}<div class="nota-prev">${t.coment||''}</div></td>
       <td><span class="tipo-chip ${TIPO_CLS[t.tipo||'OTR']}">${TIPO_LABEL[t.tipo||'OTR']}</span></td>
       <td class="${nw?'vc-vencido':vcCls(t.venc)}" style="font-size:11px">${fmtDate(t.venc)}${nw?' 🚫':''}</td>
       <td style="font-size:11px;color:#999">${t.mins?t.mins+' m':'-'}</td>
       <td><span class="badge ${done?'b-done':'b-pend'}">${done?'Listo':'Pend.'}</span></td>
-      <td><button onclick="event.stopPropagation();toggleEstado(${t.id})" style="font-size:11px;padding:2px 8px;border-radius:6px;border:0.5px solid #ddd;background:transparent;cursor:pointer">${done?'Reabrir':'✓ Listo'}</button></td>
+      <td><button onclick="event.stopPropagation();toggleEstado('${t.id}')" style="font-size:11px;padding:2px 8px;border-radius:6px;border:0.5px solid #ddd;background:transparent;cursor:pointer">${done?'Reabrir':'✓ Listo'}</button></td>
     </tr>`;
   }).join('');
 }
 
-async function toggleEstado(id){
-  const t=tasks.find(t=>t.id==id);if(!t)return;
-  t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
-  renderAll();
-  syncToSheet(t);
-}
-
-function syncToSheet(t){
-  setStatus('Sincronizando...','');
-  apiCall({action:'updateTarea',data:JSON.stringify(t)})
-    .then(res=>{
-      if(res.error){
-        console.error('Error Sheets:',res.error, res);
-        setStatus('⚠ Error al guardar en Sheets — sincronizá para recargar','err');
-      } else {
-        setStatus('Guardado ✓','ok');
-      }
-    })
-    .catch(e=>{
-      console.error('Error fetch:',e);
-      setStatus('⚠ Sin conexión — sincronizá para confirmar','');
-    });
+async function toggleEstado(id) {
+  const t = tasks.find(t => String(t.id) === String(id));
+  if (!t) return;
+  await apiUpdate({...t, estado: t.estado==='Pendiente'?'Realizado':'Pendiente'});
 }
 
 // ── MODAL ─────────────────────────────────────────────
 function populateClienteSelect(val=''){
   const sel=document.getElementById('fClienteSel');
-  sel.innerHTML='<option value="">— Seleccioná un cliente —</option>'+clientes.sort().map(c=>`<option${c===val?' selected':''}>${c}</option>`).join('');
+  sel.innerHTML='<option value="">— Seleccioná un cliente —</option>'+[...clientes].sort().map(c=>`<option${c===val?' selected':''}>${c}</option>`).join('');
 }
 function toggleNuevoCliente(){
-  const ni=document.getElementById('fClienteNew');
-  const btn=document.getElementById('btnNuevoCliente');
-  const show=ni.style.display==='none'||ni.style.display==='';
+  const ni=document.getElementById('fClienteNew'),btn=document.getElementById('btnNuevoCliente');
+  const show=ni.style.display==='none'||!ni.style.display;
   ni.style.display=show?'block':'none';
   btn.textContent=show?'← Volver a la lista':'+ Agregar cliente nuevo';
   if(show){document.getElementById('fClienteSel').value='';ni.focus();}
-  else{ni.value='';}
+  else ni.value='';
 }
 function onClienteSelChange(){
   if(document.getElementById('fClienteSel').value){
@@ -524,10 +527,10 @@ function onClienteSelChange(){
 
 function openModal(id=null){
   editId=id;
-  const t=id!==null?tasks.find(t=>t.id==id):null;
+  const t=id!==null?tasks.find(t=>String(t.id)===String(id)):null;
   document.getElementById('modalTitle').textContent=t?'Editar tarea':'Nueva tarea';
   document.getElementById('fSocia').value=t?t.socia:'Julieta';
-  document.getElementById('fSocia2').value=t?t.socia2||'':'';
+  document.getElementById('fSocia2').value=t?(t.socia2||''):'';
   document.getElementById('fPrio').value=t?(t.prio||'N'):'N';
   document.getElementById('fTipo').value=t?(t.tipo||'OTR'):'OTR';
   populateClienteSelect(t?t.cliente:'');
@@ -547,14 +550,13 @@ function closeModal(){document.getElementById('modalBg').classList.remove('open'
 
 async function saveTask(){
   const btn=document.getElementById('btnSave');
-  btn.disabled=true;btn.textContent='Guardando...';
+  btn.disabled=true; btn.textContent='Guardando...';
   const nuevoCliente=document.getElementById('fClienteNew').value.trim();
   const clienteSel=document.getElementById('fClienteSel').value;
   const cliente=nuevoCliente||clienteSel;
   if(!cliente){alert('Seleccioná o escribí un cliente.');btn.disabled=false;btn.textContent='Guardar';return;}
   const tarea=document.getElementById('fTarea').value.trim();
   if(!tarea){alert('Escribí la tarea.');btn.disabled=false;btn.textContent='Guardar';return;}
-  // Agregar cliente nuevo al MAESTRO si corresponde
   if(nuevoCliente){
     await apiCall({action:'addCliente',nombre:nuevoCliente});
     if(!clientes.includes(nuevoCliente))clientes.push(nuevoCliente);
@@ -573,40 +575,46 @@ async function saveTask(){
     seguimiento:document.getElementById('fSeguimiento').checked?'Si':'No',
     coment:document.getElementById('fComent').value,
   };
-  if(editId!==null)obj.id=editId;
   try{
     if(editId!==null){
-      const idx=tasks.findIndex(t=>t.id==editId);
-      if(idx>=0)tasks[idx]={...tasks[idx],...obj};
+      obj.id=editId;
       closeModal();
-      renderAll();
-      syncToSheet({...obj, id:editId});
+      await apiUpdate(obj);
     } else {
-      // nueva tarea: agregar en memoria con ID temporal, luego recargar
-      const tempId='tmp_'+Date.now();
-      tasks.push({...obj, id:tempId});
       closeModal();
-      renderAll();
       setStatus('Guardando...','');
-      await apiCall({action:'saveTarea',data:JSON.stringify(obj)});
+      const res=await apiCall({action:'saveTarea',data:JSON.stringify(obj)});
+      if(res.error)throw new Error(res.error);
       await loadData();
       setStatus('Guardado ✓','ok');
     }
-  }catch(e){setStatus('Error al guardar','err');}
-  btn.disabled=false;btn.textContent='Guardar';
+  }catch(e){
+    console.error('saveTask error:',e);
+    setStatus('Error al guardar','err');
+  }
+  btn.disabled=false; btn.textContent='Guardar';
 }
 
 async function deleteTask(){
   if(!editId)return;
   if(!confirm('¿Eliminar esta tarea?'))return;
+  const id=editId;
+  closeModal();
+  tasks=tasks.filter(t=>String(t.id)!==String(id));
+  renderAll();
   setStatus('Eliminando...','');
-  await apiCall({action:'deleteTarea',id:editId});
-  tasks=tasks.filter(t=>t.id!=editId);
-  closeModal();renderAll();setStatus('Eliminado ✓','ok');
+  try{
+    const res=await apiCall({action:'deleteTarea',id:String(id)});
+    if(res.error)throw new Error(res.error);
+    setStatus('Eliminado ✓','ok');
+  }catch(e){
+    console.error('deleteTask error:',e);
+    setStatus('Error al eliminar','err');
+    await loadData();
+  }
 }
 
 function switchTab(tab){
-  activeTab=tab;
   document.getElementById('tabCarga').style.display=tab==='carga'?'block':'none';
   document.getElementById('tabTareas').style.display=tab==='tareas'?'block':'none';
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&tab==='carga')||(i===1&&tab==='tareas')));

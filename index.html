@@ -275,7 +275,18 @@ const today = new Date(); today.setHours(0,0,0,0);
 // ── API ───────────────────────────────────────────────
 function apiCall(params) {
   const qs = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&');
-  return fetch(API + '?' + qs).then(r => r.json());
+  const url = API + '?' + qs;
+  // Para lecturas usamos GET, para escrituras POST
+  const isWrite = ['updateTarea','saveTarea','deleteTarea','addCliente'].includes(params.action);
+  if (isWrite) {
+    return fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: qs,
+      redirect: 'follow'
+    }).then(r => r.json());
+  }
+  return fetch(url).then(r => r.json());
 }
 
 async function loadData() {

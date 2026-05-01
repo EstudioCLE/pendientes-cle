@@ -283,7 +283,7 @@ td.wrap{white-space:normal;line-height:1.4}
 </div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbwpmjSNRn4Gh0DydNgLg8fTLqgJLrxSLiDKD9Xt494MnNqac5hx6amek5Yb4bGEkS9y6g/exec';
+const API='https://script.google.com/macros/s/AKfycbzOucEcIxwQtFmqVZK0dNqPVLr7Am4wKZjba20QyWHWx4BbkTQdx4lzt7J_o6YTKC704Q/exec';
 const CFG={Julieta:{horas:8,mitad:false},Carolina:{horas:8,mitad:false},Luisina:{horas:4,mitad:false}};
 const WARN=0.75;
 const nonWorking=new Set();
@@ -486,8 +486,18 @@ async function toggleEstado(id){
 function syncToSheet(t){
   setStatus('Sincronizando...','');
   apiCall({action:'updateTarea',data:JSON.stringify(t)})
-    .then(()=>setStatus('Guardado ✓','ok'))
-    .catch(()=>setStatus('⚠ Guardado en pantalla, sincronizar para confirmar',''));
+    .then(res=>{
+      if(res.error){
+        console.error('Error Sheets:',res.error, res);
+        setStatus('⚠ Error al guardar en Sheets — sincronizá para recargar','err');
+      } else {
+        setStatus('Guardado ✓','ok');
+      }
+    })
+    .catch(e=>{
+      console.error('Error fetch:',e);
+      setStatus('⚠ Sin conexión — sincronizá para confirmar','');
+    });
 }
 
 // ── MODAL ─────────────────────────────────────────────

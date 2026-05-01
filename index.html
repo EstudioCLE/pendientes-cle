@@ -479,17 +479,15 @@ function renderTareas(){
 async function toggleEstado(id){
   const t=tasks.find(t=>t.id==id);if(!t)return;
   t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
-  renderAll(); // actualiza pantalla inmediatamente
-  setStatus('Guardando...','');
-  try{
-    await apiCall({action:'updateTarea',data:JSON.stringify(t)});
-    setStatus('Guardado ✓','ok');
-  }catch(e){
-    // si falla, revertir
-    t.estado=t.estado==='Pendiente'?'Realizado':'Pendiente';
-    renderAll();
-    setStatus('Error al guardar','err');
-  }
+  renderAll();
+  syncToSheet(t);
+}
+
+function syncToSheet(t){
+  setStatus('Sincronizando...','');
+  apiCall({action:'updateTarea',data:JSON.stringify(t)})
+    .then(()=>setStatus('Guardado ✓','ok'))
+    .catch(()=>setStatus('⚠ Guardado en pantalla, sincronizar para confirmar',''));
 }
 
 // ── MODAL ─────────────────────────────────────────────
@@ -568,16 +566,20 @@ async function saveTask(){
   if(editId!==null)obj.id=editId;
   try{
     if(editId!==null){
-      // actualizar en memoria inmediatamente
       const idx=tasks.findIndex(t=>t.id==editId);
       if(idx>=0)tasks[idx]={...tasks[idx],...obj};
-      closeModal();renderAll();setStatus('Guardando...','');
-      await apiCall({action:'updateTarea',data:JSON.stringify(obj)});
-      setStatus('Guardado ✓','ok');
+      closeModal();
+      renderAll();
+      syncToSheet({...obj, id:editId});
     } else {
-      closeModal();setStatus('Guardando...','');
+      // nueva tarea: agregar en memoria con ID temporal, luego recargar
+      const tempId='tmp_'+Date.now();
+      tasks.push({...obj, id:tempId});
+      closeModal();
+      renderAll();
+      setStatus('Guardando...','');
       await apiCall({action:'saveTarea',data:JSON.stringify(obj)});
-      await loadData(); // solo para nuevas tareas (necesitamos el ID real)
+      await loadData();
       setStatus('Guardado ✓','ok');
     }
   }catch(e){setStatus('Error al guardar','err');}
